@@ -23,7 +23,7 @@ jobs:
           - os: macos-latest
             platform: mac
             arch: arm64
-          - os: macos-latest
+          - os: macos-15-intel
             platform: mac
             arch: x64
           - os: windows-latest
@@ -41,6 +41,13 @@ jobs:
       - run: npx electron-builder --${{ matrix.platform }} --${{ matrix.arch }} --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Verify packaged Mac executable
+        if: matrix.platform == 'mac'
+        run: node scripts/verify-package.cjs "dist/mac${{ matrix.arch == 'arm64' && '-arm64' || '' }}/上班鼓励器.app/Contents/MacOS/上班鼓励器"
+      - name: Verify Windows install and reinstall
+        if: matrix.platform == 'win'
+        shell: pwsh
+        run: ./scripts/installer-smoke.ps1
       - uses: actions/upload-artifact@v4
         with:
           name: installers-${{ matrix.platform }}-${{ matrix.arch }}
