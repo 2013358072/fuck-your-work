@@ -35,7 +35,7 @@ async function checkUpdate(){
 }
 async function start(){
  store=new Store(chooseDir());if(store.data.active){transact(()=>{store.data.active=null;});notice='检测到上次计时中断，已保留已记录时长。中断期间可手动补录。';}
- win=new BrowserWindow({width:420,height:620,minWidth:390,minHeight:560,resizable:true,title:'上班鼓励器',backgroundColor:'#f7f8f4',autoHideMenuBar:true,titleBarStyle:process.platform==='darwin'?'hiddenInset':'default',show:false,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
+ win=new BrowserWindow({useContentSize:true,width:420,height:620,minWidth:390,minHeight:560,resizable:true,title:'上班鼓励器',backgroundColor:'#fafafa',autoHideMenuBar:true,titleBarStyle:process.platform==='darwin'?'hiddenInset':'default',show:false,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
  win.setAlwaysOnTop(store.data.settings.alwaysOnTop);win.once('ready-to-show',()=>win.show());win.loadFile(path.join(__dirname,'index.html'));
  win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',e=>e.preventDefault());
  ipcMain.handle('invoke',async(event,action,payload)=>{if(event.sender!==win.webContents||event.senderFrame!==win.webContents.mainFrame)throw Error('来源无效');try{

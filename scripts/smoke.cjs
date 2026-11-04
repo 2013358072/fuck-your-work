@@ -12,6 +12,8 @@ const {_electron}=require('playwright-core');const assert=require('node:assert/s
  await page.locator('#toggleOT').click();await page.waitForFunction(()=>document.querySelector('#toggleOT').classList.contains('active'));await page.locator('#toggleOT').click();await page.waitForFunction(()=>!document.querySelector('#toggleOT').classList.contains('active'));
  // A narrow window must stay usable with no horizontal page overflow.
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth);assert.equal(overflow,false);
+ await page.evaluate(()=>{document.querySelector('#toast').hidden=true;window.scrollTo(0,0);});
+ const height=await page.evaluate(()=>({footer:document.querySelector('footer').getBoundingClientRect().bottom,viewport:window.innerHeight}));assert.ok(height.footer<=height.viewport,JSON.stringify(height));
  if(process.env.WORK_ENCOURAGER_SCREENSHOT)await page.screenshot({path:process.env.WORK_ENCOURAGER_SCREENSHOT});
  await app.close();app=await launch();page=await app.firstWindow();await page.waitForFunction(()=>document.querySelector('#clock').textContent.length>0);const r=await page.evaluate(()=>window.encourager.invoke('state'));assert.equal(r.state.settings.salary,8700);assert.ok(r.state.stats.balance>=.75&&r.state.stats.balance<.751);assert.equal(r.state.active,null);assert.equal(r.state.adjustments.length,1);assert.deepEqual(errors,[]);console.log('PASS: 真实桌面窗口、设置保存、加班补录、调休使用、记录、计时切换、重启恢复、无渲染错误');
  }finally{if(app)await app.close();fs.rmSync(dir,{recursive:true,force:true});}})().catch(e=>{console.error(e);process.exitCode=1;});
