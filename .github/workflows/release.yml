@@ -75,4 +75,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" installers/* --verify-tag --title "上班鼓励器 $GITHUB_REF_NAME" --notes "简洁的实时工资、加班计时与长期调休累计工具。提供 macOS Apple Silicon / Intel 的 DMG、ZIP，以及 Windows x64 安装版和便携版。首次发布尚未进行 Apple 公证或 Windows 代码签名，系统可能提示未知发布者。设置中可启用后续版本通知。"
+          gh release create "$GITHUB_REF_NAME" installers/* --verify-tag --title "上班鼓励器 $GITHUB_REF_NAME" --notes "采用黑白极简界面与领带打工牛图标，支持实时工资、加班计时与长期调休累计。提供 macOS Apple Silicon / Intel 的 DMG、ZIP，以及 Windows x64 安装版和便携版。安装包尚未进行 Apple 公证或 Windows 代码签名，系统可能提示未知发布者。设置中可启用后续版本通知。"
