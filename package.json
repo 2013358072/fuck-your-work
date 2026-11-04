@@ -1,0 +1,110 @@
+{
+  "name": "work-encourager",
+  "productName": "上班鼓励器",
+  "version": "1.0.0",
+  "description": "让每一秒的努力都有回响。简洁的工资与加班计时器。",
+  "main": "src/main.cjs",
+  "author": "2013358072",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2013358072/fuck-your-work.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:win": "electron-builder --win --publish never",
+    "test:desktop": "node scripts/smoke.cjs"
+  },
+  "devDependencies": {
+    "electron": "^45.2.2",
+    "electron-builder": "^26.18.0",
+    "playwright-core": "^1.64.1"
+  },
+  "build": {
+    "appId": "com.encourager.work",
+    "productName": "上班鼓励器",
+    "asar": true,
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "artifactName": "WorkEncourager-${version}-${os}-${arch}.${ext}",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "2013358072",
+        "repo": "fuck-your-work"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "identity": null
+    },
+    "dmg": {
+      "title": "上班鼓励器",
+      "contents": [
+        {
+          "x": 140,
+          "y": 160
+        },
+        {
+          "x": 410,
+          "y": 160,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "上班鼓励器",
+      "artifactName": "WorkEncourager-${version}-windows-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "WorkEncourager-${version}-windows-${arch}-portable.${ext}"
+    }
+  }
+}
