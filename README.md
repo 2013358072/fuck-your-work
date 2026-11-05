@@ -21,7 +21,29 @@
 | Mac Intel | `mac-x64.dmg`（或 ZIP） |
 | Windows x64 | `windows-x64-setup.exe`；免安装选 `portable.exe` |
 
-Mac 将应用拖入“应用程序”。Windows 安装版支持选择目录。当前安装包未经 Apple 公证或 Windows 代码签名，首次运行可能提示未知发布者；请确认下载来自本仓库，再按系统提示允许打开。
+Mac 将应用拖入“应用程序”。Windows 安装版支持选择目录。
+
+当前 v1.0.4 的 Mac 包使用临时签名，尚未取得 Developer ID 或经过 Apple 公证；Windows 包也没有可信发布者签名。它们不会被系统自动信任。重新打包或自签证书不能消除其他电脑上的身份验证提示。
+
+### Mac 首次运行
+
+若提示“Apple 无法验证是否包含恶意软件”，先确认应用来自本仓库 Releases，然后：
+
+1. 关闭提示框，打开“系统设置 → 隐私与安全性”。
+2. 滚动到“安全性”，找到“已阻止上班鼓励器”的提示。
+3. 点击该应用旁的“仍要打开”，按系统要求用密码或触控 ID 确认，再点击“打开”。
+
+这会为当前应用建立本机例外，不代表软件已通过 Apple 公证；新版本仍可能需要再次确认。无需关闭整个系统的 Gatekeeper。参见 [Apple 的单应用打开说明](https://support.apple.com/zh-cn/guide/mac-help/mh40617/mac)。
+
+### Windows 首次运行
+
+如果是“Windows 已保护你的电脑”的 SmartScreen 提示，在确认下载来源后点击“更多信息 → 仍要运行”。这属于本机允许运行，不会赋予文件可信发布者身份。
+
+如果提示明确检出病毒、恶意软件，或 Smart App Control / 企业策略直接阻止运行，请记录完整提示和检测名称；这些情况不能用上述步骤等同处理，也不应关闭 Defender 或全局应用保护来运行。
+
+### 面向其他用户的正式分发
+
+Mac 需要 Apple Developer Program 会员签发的 Developer ID Application 证书、签名、公证和公证票据装订。Windows 可以使用可信代码签名服务/证书，或经审核通过 Microsoft Store 分发 MSIX。Windows 签名可以显示可信发布者，但新应用仍可能出现 SmartScreen 信誉提示，不能保证买证书后立即消失。参见 [Apple Developer ID](https://developer.apple.com/developer-id/)、[Microsoft SmartScreen 说明](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation)。
 
 ## 计薪口径
 
