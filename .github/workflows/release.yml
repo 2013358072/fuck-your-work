@@ -75,4 +75,29 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" installers/* --verify-tag --title "上班鼓励器 $GITHUB_REF_NAME" --notes "采用黑白极简界面与领带打工牛图标，支持实时工资、加班计时与长期调休累计。提供 macOS Apple Silicon / Intel 的 DMG、ZIP，以及 Windows x64 安装版和便携版。安装包尚未进行 Apple 公证或 Windows 代码签名，系统可能提示未知发布者。设置中可启用后续版本通知。"
+          cat > "$RUNNER_TEMP/release-notes.txt" <<'NOTES'
+          - 新增每月发薪日：按上次发薪日至下次发薪日前一天累计工资；短月份自动取月末。
+          - 新增黑白迷你悬浮窗：只显示今日已赚，支持拖动、一键置顶和还原，重启后保留模式。
+          - 完善远程更新推送：启动及每 30 分钟检查，系统通知、更新详情、对应平台下载，失败后自动重试。
+          - 保留原有工资设置、加班记录和长期调休余额。
+
+          提供 macOS Apple Silicon / Intel 的 DMG、ZIP，以及 Windows x64 安装版和便携版。
+          安装包尚未进行 Apple 公证或 Windows 可信代码签名，系统可能提示未知发布者。更新需下载后确认安装。
+          NOTES
+          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" --draft --verify-tag --title "上班鼓励器 $GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/release-notes.txt"
+          fi
+          # Keep the release in draft until every installer is completely uploaded.
+          for asset in installers/*; do
+            name=$(basename "$asset")
+            size=$(stat -c%s "$asset")
+            for attempt in 1 2 3 4 5; do
+              remote=$(gh release view "$GITHUB_REF_NAME" --json assets --jq ".assets[] | select(.name == \"$name\") | .size" 2>/dev/null || true)
+              if [ "$remote" = "$size" ]; then break; fi
+              gh release upload "$GITHUB_REF_NAME" "$asset" --clobber || true
+              sleep 5
+            done
+            remote=$(gh release view "$GITHUB_REF_NAME" --json assets --jq ".assets[] | select(.name == \"$name\") | .size")
+            [ "$remote" = "$size" ] || { echo "Upload incomplete: $name"; exit 1; }
+          done
+          gh release edit "$GITHUB_REF_NAME" --draft=false --latest --notes-file "$RUNNER_TEMP/release-notes.txt"

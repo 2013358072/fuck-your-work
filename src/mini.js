@@ -1,0 +1,4 @@
+const $=id=>document.getElementById(id);
+function receive(state){$('miniEarned').textContent='¥'+state.stats.today.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});const pinned=state.settings.alwaysOnTop;$('miniPin').setAttribute('aria-pressed',String(pinned));$('miniPin').title=pinned?'取消置顶':'固定到最顶部';$('miniPin').setAttribute('aria-label',$('miniPin').title);}
+async function invoke(action){try{const r=await window.encourager.invoke(action);if(!r.ok)throw Error(r.error);if(r.state)receive(r.state);}catch(e){$('miniError').textContent=e.message;$('miniError').hidden=false;setTimeout(()=>$('miniError').hidden=true,4000);}}
+$('miniPin').onclick=()=>invoke('pin');$('miniRestore').onclick=()=>invoke('restore');$('miniAmount').ondblclick=()=>invoke('restore');window.encourager.onState(receive);invoke('state');

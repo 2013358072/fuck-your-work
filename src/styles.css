@@ -3,3 +3,5 @@
 /* Compact monochrome layout: keep the overview visible in a small window. */
 header{margin-bottom:18px}.eyebrow{margin-top:18px}.money{font-size:47px}.earning-note{margin:10px 0 17px}.metrics{padding:19px 0 18px}.overtime{margin-top:17px;padding:14px 15px 0}.ot-values{margin-top:15px}.ot-footer{margin-top:13px;padding:8px 0}footer{margin-top:15px}.notice{margin-bottom:10px;padding:8px}.titlebar{height:30px}.hero{padding-top:0}main{padding-bottom:14px}.primary{background:#171717}.spark{color:#929292}
 @media(max-height:650px){header{margin-bottom:15px}.eyebrow{margin-top:15px}.earning-note{margin-bottom:14px}.metrics{padding:17px 0 16px}.overtime{margin-top:15px}.ot-values{margin-top:13px}.ot-footer{padding:7px 0;margin-top:12px}footer{margin-top:13px}}
+
+.window-tools{display:flex;align-items:center;gap:1px}.window-tools .icon-button{padding:7px}.icon-button[aria-pressed=true]{background:#222;color:white}.release-notes{font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.metrics small{display:block;line-height:1.5}
