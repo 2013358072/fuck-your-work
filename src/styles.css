@@ -5,3 +5,6 @@ header{margin-bottom:18px}.eyebrow{margin-top:18px}.money{font-size:47px}.earnin
 @media(max-height:650px){header{margin-bottom:15px}.eyebrow{margin-top:15px}.earning-note{margin-bottom:14px}.metrics{padding:17px 0 16px}.overtime{margin-top:15px}.ot-values{margin-top:13px}.ot-footer{padding:7px 0;margin-top:12px}footer{margin-top:13px}}
 
 .window-tools{display:flex;align-items:center;gap:1px}.window-tools .icon-button{padding:7px}.icon-button[aria-pressed=true]{background:#222;color:white}.release-notes{font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.metrics small{display:block;line-height:1.5}
+
+/* Salary-only overview. */
+.status-line{justify-content:flex-end}.metrics{border-bottom:0;padding-bottom:0}main{padding-bottom:22px}

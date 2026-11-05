@@ -1,7 +1,7 @@
 {
   "name": "work-encourager",
   "productName": "上班鼓励器",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "让每一秒的努力都有回响。简洁的工资与加班计时器。",
   "main": "src/main.cjs",
   "author": "2013358072",

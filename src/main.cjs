@@ -18,7 +18,7 @@ function chooseDir(){
  const fallback=path.join(app.getPath('userData'),'data');
  if(fs.existsSync(path.join(fallback,'settings.json')))return fallback;
  try{fs.mkdirSync(preferred,{recursive:true});const probe=path.join(preferred,'.write-test');fs.writeFileSync(probe,'');fs.unlinkSync(probe);return preferred;}
- catch{notice='安装目录不可写，设置已存入系统应用数据目录。';return fallback;}
+ catch{return fallback;}
 }
 function transact(fn){const before=structuredClone(store.data);try{fn();store.save();}catch(e){store.data=before;throw e;}}
 function checkpoint(){
@@ -63,7 +63,7 @@ function autoCheck(){if(store.data.settings.autoUpdate&&Date.now()-lastAttempt>=
 async function start(){
  if(process.platform==='win32')app.setAppUserModelId('com.encourager.work');
  store=new Store(chooseDir());if(store.data.active){transact(()=>{store.data.active=null;});notice='检测到上次计时中断，已保留已记录时长。中断期间可手动补录。';}
- win=new BrowserWindow({icon:path.join(__dirname,'icon.png'),useContentSize:true,width:420,height:620,minWidth:390,minHeight:560,resizable:true,title:'上班鼓励器',backgroundColor:'#fafafa',autoHideMenuBar:true,titleBarStyle:process.platform==='darwin'?'hiddenInset':'default',show:false,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
+ win=new BrowserWindow({icon:path.join(__dirname,'icon.png'),useContentSize:true,width:420,height:420,minWidth:390,minHeight:400,resizable:true,title:'上班鼓励器',backgroundColor:'#fafafa',autoHideMenuBar:true,titleBarStyle:process.platform==='darwin'?'hiddenInset':'default',show:false,webPreferences:{preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true}});
  applyPin();win.once('ready-to-show',()=>{if(store.data.settings.miniMode)openMini();else win.show();});win.loadFile(path.join(__dirname,'index.html'));
  win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',e=>e.preventDefault());
  ipcMain.handle('invoke',async(event,action,payload)=>{const sender=[win,miniWin].find(w=>w&&!w.isDestroyed()&&event.sender===w.webContents);if(!sender||event.senderFrame!==sender.webContents.mainFrame)throw Error('来源无效');if(sender===miniWin&&!['state','pin','restore'].includes(action))throw Error('悬浮窗操作无效');try{
