@@ -39,12 +39,17 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:desktop
-      - run: npx electron-builder --${{ matrix.platform }} --${{ matrix.arch }} --publish never
+      - name: Build Mac installers for the native architecture
+        if: matrix.platform == 'mac'
+        run: npx electron-builder --mac dmg zip --${{ matrix.arch }} --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Verify packaged Mac executable
+      - name: Build Windows installers
+        if: matrix.platform == 'win'
+        run: npx electron-builder --win nsis portable --x64 --publish never
+      - name: Verify final Mac installers and installed executable
         if: matrix.platform == 'mac'
-        run: node scripts/verify-package.cjs "dist/mac${{ matrix.arch == 'arm64' && '-arm64' || '' }}/上班鼓励器.app/Contents/MacOS/上班鼓励器"
+        run: node scripts/verify-mac-installers.cjs ${{ matrix.arch }}
       - name: Verify Windows install and reinstall
         if: matrix.platform == 'win'
         shell: pwsh
@@ -76,10 +81,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > "$RUNNER_TEMP/release-notes.txt" <<'NOTES'
-          - 精简主页：移除加班卡片及开始加班、补记、记录入口。
-          - 移除上班状态标签、底部鼓励文案和常规存储目录提示。
-          - 缩小主窗口，保留工资展示、发薪周期、悬浮窗、置顶和更新通知。
-          - 保留已有设置、加班记录和长期调休余额，可通过备份导出。
+          - 修复 Mac 安装镜像损坏导致访达无法读取或复制应用的问题，改用 APFS 镜像。
+          - 发布前验证最终 DMG 校验和、挂载复制、逐文件哈希、安装后的启动以及 ZIP 解压完整性。
+          - 各架构分别构建和验证，防止不同构建任务覆盖同名安装包。
+          - 保留精简主页、发薪周期、悬浮窗和现有设置及记录。
 
           提供 macOS Apple Silicon / Intel 的 DMG、ZIP，以及 Windows x64 安装版和便携版。
           安装包尚未进行 Apple 公证或 Windows 可信代码签名，系统可能提示未知发布者。更新需下载后确认安装。
